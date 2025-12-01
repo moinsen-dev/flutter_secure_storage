@@ -42,160 +42,162 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
+        appBar: AppBar(title: const Text('Plugin example app')),
         body: Padding(
           padding: const EdgeInsets.all(8),
-          child: Column(children: [
-            TextField(
-              controller: keyFieldController,
-              decoration: const InputDecoration(label: Text('Key')),
-            ),
-            TextField(
-              controller: valueFieldController,
-              decoration: const InputDecoration(label: Text('Value')),
-            ),
-            LabeledCheckbox(
-              key: useMethodChannelOnlyKey,
-              initialValue: false,
-              label: 'UseMethodChannelOnly',
-              onChanged: (useMethodChannelOnly) {
-                setState(() {
-                  _flutterSecureStorageWindowsPlugin = useMethodChannelOnly
-                      ? MethodChannelFlutterSecureStorage()
-                      : FlutterSecureStorageWindows();
-                });
-              },
-            ),
-            LabeledCheckbox(
-              key: useBackwardCompatibilityKey,
-              initialValue: false,
-              label: 'UseBackwardCompatibility',
-              onChanged: (useBackwardCompatibility) {
-                setState(() {
-                  _options['useBackwardCompatibility'] =
-                      useBackwardCompatibility.toString();
-                });
-              },
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ElevatedButton(
-                    onPressed: doRead,
-                    child: const Text('Read'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ElevatedButton(
-                    onPressed: doReadAll,
-                    child: const Text('ReadAll'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ElevatedButton(
-                    onPressed: doContainsKey,
-                    child: const Text('ContainsKey'),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ElevatedButton(
-                    onPressed: doWrite,
-                    child: const Text('Write'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ElevatedButton(
-                    onPressed: doDelete,
-                    child: const Text('Delete'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ElevatedButton(
-                    onPressed: doDeleteAll,
-                    child: const Text('DeleteAll'),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ElevatedButton(
-                    onPressed: doLegacyWrite,
-                    child: const Text('LegacyWrite'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ElevatedButton(
-                    onPressed: doLegacyReadAll,
-                    child: const Text('LegacyReadAll'),
-                  ),
-                ),
-              ],
-            ),
-            if (_future != null)
-              FutureBuilder<TestResult>(
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData && !snapshot.hasError) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  resultSummaryFieldController.text =
-                      (snapshot.data?.success ?? false) ? 'SUCCESS' : 'FAIL';
-
-                  return TextField(
-                    controller: resultSummaryFieldController,
-                    decoration: const InputDecoration(label: Text('Result')),
-                  );
-                },
-                future: _future,
+          child: Column(
+            children: [
+              TextField(
+                controller: keyFieldController,
+                decoration: const InputDecoration(label: Text('Key')),
               ),
-
-            if (_future != null)
-              FutureBuilder<TestResult>(
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData && !snapshot.hasError) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  resultDetailFieldController.text =
-                      snapshot.error?.toString() ??
-                          snapshot.data!.detail ??
-                          '<null>';
-
-                  return Column(
-                    children: [
-                      TextField(
-                        controller: resultSummaryFieldController,
-                        decoration:
-                            const InputDecoration(label: Text('Result')),
-                      ),
-                      TextField(
-                        controller: resultDetailFieldController,
-                        decoration:
-                            const InputDecoration(label: Text('Detail')),
-                      ),
-                    ],
-                  );
-                },
-                future: _future,
+              TextField(
+                controller: valueFieldController,
+                decoration: const InputDecoration(label: Text('Value')),
               ),
-            // const Expanded(child: SizedBox()),
-          ]),
+              LabeledCheckbox(
+                key: useMethodChannelOnlyKey,
+                initialValue: false,
+                label: 'UseMethodChannelOnly',
+                onChanged: (useMethodChannelOnly) {
+                  setState(() {
+                    _flutterSecureStorageWindowsPlugin = useMethodChannelOnly
+                        ? MethodChannelFlutterSecureStorage()
+                        : FlutterSecureStorageWindows();
+                  });
+                },
+              ),
+              LabeledCheckbox(
+                key: useBackwardCompatibilityKey,
+                initialValue: false,
+                label: 'UseBackwardCompatibility',
+                onChanged: (useBackwardCompatibility) {
+                  setState(() {
+                    _options['useBackwardCompatibility'] =
+                        useBackwardCompatibility.toString();
+                  });
+                },
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: doRead,
+                      child: const Text('Read'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: doReadAll,
+                      child: const Text('ReadAll'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: doContainsKey,
+                      child: const Text('ContainsKey'),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: doWrite,
+                      child: const Text('Write'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: doDelete,
+                      child: const Text('Delete'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: doDeleteAll,
+                      child: const Text('DeleteAll'),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: doLegacyWrite,
+                      child: const Text('LegacyWrite'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: doLegacyReadAll,
+                      child: const Text('LegacyReadAll'),
+                    ),
+                  ),
+                ],
+              ),
+              if (_future != null)
+                FutureBuilder<TestResult>(
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData && !snapshot.hasError) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    resultSummaryFieldController.text =
+                        (snapshot.data?.success ?? false) ? 'SUCCESS' : 'FAIL';
+
+                    return TextField(
+                      controller: resultSummaryFieldController,
+                      decoration: const InputDecoration(label: Text('Result')),
+                    );
+                  },
+                  future: _future,
+                ),
+
+              if (_future != null)
+                FutureBuilder<TestResult>(
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData && !snapshot.hasError) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    resultDetailFieldController.text =
+                        snapshot.error?.toString() ??
+                        snapshot.data!.detail ??
+                        '<null>';
+
+                    return Column(
+                      children: [
+                        TextField(
+                          controller: resultSummaryFieldController,
+                          decoration: const InputDecoration(
+                            label: Text('Result'),
+                          ),
+                        ),
+                        TextField(
+                          controller: resultDetailFieldController,
+                          decoration: const InputDecoration(
+                            label: Text('Detail'),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  future: _future,
+                ),
+              // const Expanded(child: SizedBox()),
+            ],
+          ),
         ),
       ),
     );
@@ -221,107 +223,88 @@ class MyAppState extends State<MyApp> {
   }
 
   void doRead() => doTest(() async {
-        final key = keyFieldController.text;
-        return TestResult(
-          success: true,
-          detail: await _flutterSecureStorageWindowsPlugin.read(
-            key: key,
-            options: _options,
-          ),
-        );
-      });
+    final key = keyFieldController.text;
+    return TestResult(
+      success: true,
+      detail: await _flutterSecureStorageWindowsPlugin.read(
+        key: key,
+        options: _options,
+      ),
+    );
+  });
 
   void doReadAll() => doTest(() async {
-        return TestResult(
-          success: true,
-          detail: (await _flutterSecureStorageWindowsPlugin.readAll(
-            options: _options,
-          ))
-              .toString(),
-        );
-      });
+    return TestResult(
+      success: true,
+      detail: (await _flutterSecureStorageWindowsPlugin.readAll(
+        options: _options,
+      )).toString(),
+    );
+  });
 
   void doContainsKey() => doTest(() async {
-        final key = keyFieldController.text;
-        return TestResult(
-          success: true,
-          detail: (await _flutterSecureStorageWindowsPlugin.containsKey(
-            key: key,
-            options: _options,
-          ))
-              .toString(),
-        );
-      });
+    final key = keyFieldController.text;
+    return TestResult(
+      success: true,
+      detail: (await _flutterSecureStorageWindowsPlugin.containsKey(
+        key: key,
+        options: _options,
+      )).toString(),
+    );
+  });
 
   void doWrite() => doTest(() async {
-        final key = keyFieldController.text;
-        final value = valueFieldController.text.isNotEmpty
-            ? valueFieldController.text
-            : DateTime.now().toIso8601String();
-        await _flutterSecureStorageWindowsPlugin.write(
-          key: key,
-          value: value,
-          options: _options,
-        );
-        return TestResult(success: true, detail: value);
-      });
+    final key = keyFieldController.text;
+    final value = valueFieldController.text.isNotEmpty
+        ? valueFieldController.text
+        : DateTime.now().toIso8601String();
+    await _flutterSecureStorageWindowsPlugin.write(
+      key: key,
+      value: value,
+      options: _options,
+    );
+    return TestResult(success: true, detail: value);
+  });
 
   void doDelete() => doTest(() async {
-        final key = keyFieldController.text;
-        await _flutterSecureStorageWindowsPlugin.delete(
-          key: key,
-          options: _options,
-        );
-        return TestResult(
-          success: true,
-          detail: null,
-        );
-      });
+    final key = keyFieldController.text;
+    await _flutterSecureStorageWindowsPlugin.delete(
+      key: key,
+      options: _options,
+    );
+    return TestResult(success: true, detail: null);
+  });
 
   void doDeleteAll() => doTest(() async {
-        await _flutterSecureStorageWindowsPlugin.deleteAll(
-          options: _options,
-        );
-        return TestResult(
-          success: true,
-          detail: null,
-        );
-      });
+    await _flutterSecureStorageWindowsPlugin.deleteAll(options: _options);
+    return TestResult(success: true, detail: null);
+  });
 
   void doLegacyWrite() => doTest(() async {
-        final key = keyFieldController.text;
-        final value = valueFieldController.text.isNotEmpty
-            ? valueFieldController.text
-            : DateTime.now().toIso8601String();
-        // call MethodChannelFlutterSecureStorage directly
-        final legacyStorage = MethodChannelFlutterSecureStorage();
-        await legacyStorage.write(
-          key: key,
-          value: value,
-          options: _options,
-        );
-        return TestResult(success: true, detail: value);
-      });
+    final key = keyFieldController.text;
+    final value = valueFieldController.text.isNotEmpty
+        ? valueFieldController.text
+        : DateTime.now().toIso8601String();
+    // call MethodChannelFlutterSecureStorage directly
+    final legacyStorage = MethodChannelFlutterSecureStorage();
+    await legacyStorage.write(key: key, value: value, options: _options);
+    return TestResult(success: true, detail: value);
+  });
 
   void doLegacyReadAll() => doTest(() async {
-        // call MethodChannelFlutterSecureStorage directly
-        final legacyStorage = MethodChannelFlutterSecureStorage();
-        return TestResult(
-            success: true,
-            detail: (await legacyStorage.readAll(
-              options: _options,
-            ))
-                .toString());
-      });
+    // call MethodChannelFlutterSecureStorage directly
+    final legacyStorage = MethodChannelFlutterSecureStorage();
+    return TestResult(
+      success: true,
+      detail: (await legacyStorage.readAll(options: _options)).toString(),
+    );
+  });
 }
 
 class TestResult {
   final bool success;
   final String? detail;
-  TestResult({
-    required this.success,
-    required this.detail,
-  });
+  TestResult({required this.success, required this.detail});
 }
 
 class LabeledCheckbox extends StatefulWidget {
@@ -363,21 +346,24 @@ class LabeledCheckboxState extends State<LabeledCheckbox> {
 
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: () {
-          value = !value;
-        },
-        child: Padding(
-          padding: widget.padding,
-          child: Row(children: [
-            Expanded(child: Text(widget.label)),
-            Checkbox(
-                value: value,
-                onChanged: (newValue) {
-                  if (newValue != null) {
-                    value = newValue;
-                  }
-                })
-          ]),
-        ),
-      );
+    onTap: () {
+      value = !value;
+    },
+    child: Padding(
+      padding: widget.padding,
+      child: Row(
+        children: [
+          Expanded(child: Text(widget.label)),
+          Checkbox(
+            value: value,
+            onChanged: (newValue) {
+              if (newValue != null) {
+                value = newValue;
+              }
+            },
+          ),
+        ],
+      ),
+    ),
+  );
 }

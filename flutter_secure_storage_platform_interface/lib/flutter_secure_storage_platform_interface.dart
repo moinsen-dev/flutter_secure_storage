@@ -105,9 +105,7 @@ abstract class FlutterSecureStoragePlatform extends PlatformInterface {
   /// Returns:
   /// - A [Future] that resolves to a map containing all key-value pairs in
   /// storage.
-  Future<Map<String, String>> readAll({
-    required Map<String, String> options,
-  });
+  Future<Map<String, String>> readAll({required Map<String, String> options});
 
   /// Deletes all key-value pairs from secure storage.
   ///
@@ -117,7 +115,5 @@ abstract class FlutterSecureStoragePlatform extends PlatformInterface {
   ///
   /// Returns:
   /// - A [Future] that completes when the delete-all operation finishes.
-  Future<void> deleteAll({
-    required Map<String, String> options,
-  });
+  Future<void> deleteAll({required Map<String, String> options});
 }

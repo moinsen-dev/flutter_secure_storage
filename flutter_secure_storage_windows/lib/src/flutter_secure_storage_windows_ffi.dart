@@ -35,10 +35,7 @@ class FlutterSecureStorageWindows extends FlutterSecureStoragePlatform {
   /// configurations for both backward compatibility and platform-specific
   /// storage.
   FlutterSecureStorageWindows()
-      : this._(
-          MethodChannelFlutterSecureStorage(),
-          DpapiJsonFileMapStorage(),
-        );
+    : this._(MethodChannelFlutterSecureStorage(), DpapiJsonFileMapStorage());
 
   /// Internal constructor to initialize `FlutterSecureStorageWindows` with
   /// custom implementations for backward compatibility and platform-specific
@@ -48,10 +45,7 @@ class FlutterSecureStorageWindows extends FlutterSecureStoragePlatform {
   /// - [_backwardCompatible]: The storage mechanism used for backward
   ///   compatibility.
   /// - [_storage]: The platform-specific storage backend for Windows.
-  FlutterSecureStorageWindows._(
-    this._backwardCompatible,
-    this._storage,
-  );
+  FlutterSecureStorageWindows._(this._backwardCompatible, this._storage);
 
   /// The storage implementation used for backward compatibility.
   final FlutterSecureStoragePlatform _backwardCompatible;
@@ -117,8 +111,10 @@ class FlutterSecureStorageWindows extends FlutterSecureStoragePlatform {
     var result = map[key];
     if (options.useBackwardCompatibility) {
       if (result == null) {
-        final compatible =
-            await _backwardCompatible.read(key: key, options: options);
+        final compatible = await _backwardCompatible.read(
+          key: key,
+          options: options,
+        );
         if (compatible != null) {
           // Write back now, so the value should be retrieved from JSON file
           // next.
@@ -199,11 +195,9 @@ class FlutterSecureStorageWindows extends FlutterSecureStoragePlatform {
 FlutterSecureStorageWindows createFlutterSecureStorageWindows(
   FlutterSecureStoragePlatform backwardCompatible,
   MapStorage mapStorage,
-) =>
-    FlutterSecureStorageWindows._(backwardCompatible, mapStorage);
+) => FlutterSecureStorageWindows._(backwardCompatible, mapStorage);
 
 @visibleForTesting
-
 /// An abstract class that defines the interface for map-based storage
 /// implementations.
 abstract class MapStorage {
@@ -253,10 +247,7 @@ class DpapiJsonFileMapStorage extends MapStorage {
     final appDataDirectory = await getApplicationSupportDirectory();
 
     return path.canonicalize(
-      path.join(
-        appDataDirectory.path,
-        encryptedJsonFileName,
-      ),
+      path.join(appDataDirectory.path, encryptedJsonFileName),
     );
   }
 
@@ -274,9 +265,7 @@ class DpapiJsonFileMapStorage extends MapStorage {
       // Another process has been deleted a file or parent directory
       // since previous File.exists() call.
       // We can ignore it.
-      debugPrint(
-        'Reading file has been deleted by another process. $e',
-      );
+      debugPrint('Reading file has been deleted by another process. $e');
       return {};
     }
 
@@ -289,14 +278,16 @@ class DpapiJsonFileMapStorage extends MapStorage {
             .setAll(0, encryptedText);
 
         // Specify size of the struct explicitly.
-        final encryptedTextBlob =
-            alloc.allocate<CRYPT_INTEGER_BLOB>(sizeOf<CRYPT_INTEGER_BLOB>());
+        final encryptedTextBlob = alloc.allocate<CRYPT_INTEGER_BLOB>(
+          sizeOf<CRYPT_INTEGER_BLOB>(),
+        );
         encryptedTextBlob.ref.cbData = encryptedText.length;
         encryptedTextBlob.ref.pbData = pEncryptedText;
 
         // Specify size of the struct explicitly.
-        final plainTextBlob =
-            alloc.allocate<CRYPT_INTEGER_BLOB>(sizeOf<CRYPT_INTEGER_BLOB>());
+        final plainTextBlob = alloc.allocate<CRYPT_INTEGER_BLOB>(
+          sizeOf<CRYPT_INTEGER_BLOB>(),
+        );
         if (CryptUnprotectData(
               encryptedTextBlob,
               nullptr,
@@ -356,9 +347,7 @@ class DpapiJsonFileMapStorage extends MapStorage {
       decoded = jsonDecode(plainText);
     } on FormatException catch (e) {
       // A file content should be malformed.
-      debugPrint(
-        'Failed to parse JSON: $e Delete corrupt file: ${file.path}',
-      );
+      debugPrint('Failed to parse JSON: $e Delete corrupt file: ${file.path}');
       await file.delete();
       rethrow;
     }
@@ -373,8 +362,9 @@ class DpapiJsonFileMapStorage extends MapStorage {
     }
 
     return {
-      for (final e
-          in decoded.entries.where((x) => x.key is String && x.value is String))
+      for (final e in decoded.entries.where(
+        (x) => x.key is String && x.value is String,
+      ))
         e.key as String: e.value as String,
     };
   }
@@ -393,14 +383,16 @@ class DpapiJsonFileMapStorage extends MapStorage {
       pPlainText.asTypedList(plainText.length).setAll(0, plainText);
 
       // Specify size of the struct explicitly.
-      final plainTextBlob =
-          alloc.allocate<CRYPT_INTEGER_BLOB>(sizeOf<CRYPT_INTEGER_BLOB>());
+      final plainTextBlob = alloc.allocate<CRYPT_INTEGER_BLOB>(
+        sizeOf<CRYPT_INTEGER_BLOB>(),
+      );
       plainTextBlob.ref.cbData = plainText.length;
       plainTextBlob.ref.pbData = pPlainText;
 
       // Specify size of the struct explicitly.
-      final encryptedTextBlob =
-          alloc.allocate<CRYPT_INTEGER_BLOB>(sizeOf<CRYPT_INTEGER_BLOB>());
+      final encryptedTextBlob = alloc.allocate<CRYPT_INTEGER_BLOB>(
+        sizeOf<CRYPT_INTEGER_BLOB>(),
+      );
       if (CryptProtectData(
             plainTextBlob,
             nullptr,
@@ -425,23 +417,23 @@ class DpapiJsonFileMapStorage extends MapStorage {
       }
 
       try {
-        final encryptedText = encryptedTextBlob.ref.pbData
-            .asTypedList(encryptedTextBlob.ref.cbData);
+        final encryptedText = encryptedTextBlob.ref.pbData.asTypedList(
+          encryptedTextBlob.ref.cbData,
+        );
 
         // Loop to handle race condition.
         while (true) {
           try {
-            await (await file.create(recursive: true))
-                .writeAsBytes(encryptedText, flush: true);
+            await (await file.create(
+              recursive: true,
+            )).writeAsBytes(encryptedText, flush: true);
             // If success, finish loop.
             break;
           } on FileSystemException catch (e) {
             // Another process has been deleted a file or parent directory
             // since previous File.create() call.
             // We will retry writing.
-            debugPrint(
-              'Reading file has been deleted by another process. $e',
-            );
+            debugPrint('Reading file has been deleted by another process. $e');
           }
         }
       } finally {
@@ -467,9 +459,7 @@ class DpapiJsonFileMapStorage extends MapStorage {
         // Another process has been deleted a file or parent directory
         // since previous File.exists() call.
         // We can ignore it.
-        debugPrint(
-          'Deleting file has been deleted by another process. $e',
-        );
+        debugPrint('Deleting file has been deleted by another process. $e');
       }
     }
   }
